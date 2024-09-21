@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Menu, IconButton } from "react-native-paper"
 import { deleteVideoPost, saveVideoPost } from '@/lib/appWrite';
 import { usePathname } from 'expo-router';
+import { useGlobalContext } from '@/context/GlobalProvider';
 
 type Props = {
     videoId: string,
@@ -25,36 +26,39 @@ const VideoMenu = ({ videoId, refetch }: Props) => {
     }
 
     function openMenu() {
-
         setIsVisible(true)
     }
 
     async function handleSaveVideo() {
-        setIsLoading(true)
-        try {
-            await saveVideoPost(videoId)
-            setIsVisible(false)
-            Alert.alert("Success", "Video was saved successfully")
-        } catch (error: any) {
-            Alert.alert("Error", error.message)
-        } finally {
-            setIsLoading(false)
+        if(isLoading === false) {
+            setIsLoading(true)
+            try {
+                await saveVideoPost(videoId)
+                setIsVisible(false)
+                Alert.alert("Success", "Video was saved successfully")
+            } catch (error: any) {
+                Alert.alert("Error", error.message)
+            } finally {
+                setIsLoading(false)
+            }
         }
     }
 
     async function handleRemoveVideo() {
-        setIsLoading(true)
-        try {
-            await deleteVideoPost(videoId)
-            setIsVisible(false)
-            Alert.alert("Success", "Video was removed successfully")
-            if (refetch) {
-                refetch()
+        if(isLoading === false) {
+            setIsLoading(true)
+            try {
+                await deleteVideoPost(videoId)
+                setIsVisible(false)
+                Alert.alert("Success", "Video was removed successfully")
+                if (refetch) {
+                    refetch()
+                }
+            } catch (error: any) {
+                Alert.alert("Error", error.message)
+            } finally {
+                setIsLoading(false)
             }
-        } catch (error: any) {
-            Alert.alert("Error", error.message)
-        } finally {
-            setIsLoading(false)
         }
     }
     return (
@@ -70,10 +74,10 @@ const VideoMenu = ({ videoId, refetch }: Props) => {
                     />}
             >
                 {isVideoSaved ? (
-                    <Menu.Item onPress={handleRemoveVideo} title="Remove" />
+                    <Menu.Item onPress={handleRemoveVideo} title="Remove" disabled={isLoading} />
                 ) :
                     (
-                        <Menu.Item onPress={handleSaveVideo} title="Save" />
+                        <Menu.Item onPress={handleSaveVideo} title="Save" disabled={isLoading} />
                     )}
             </Menu>
         </View>

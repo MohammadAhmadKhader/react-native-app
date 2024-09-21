@@ -274,6 +274,16 @@ export async function saveVideoPost(videoPostId:string){
         const result = await getCurrentUser();
         const userId = result?.user.id;
 
+        const videoPost = await databases.listDocuments(
+            config.databaseId,
+            config.usersVideosCollectionId,
+            [Query.equal("video",videoPostId),Query.equal("user",userId ?? "")]
+        )
+            
+        if(videoPost.documents.length > 0){
+            throw new Error("You already have this saved on bookmark.")
+        }
+
         const usersVideosLike = await databases.createDocument(
             config.databaseId,
             config.usersVideosCollectionId,
