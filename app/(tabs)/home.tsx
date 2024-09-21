@@ -1,5 +1,5 @@
 import { View, Text, FlatList, Image, Alert } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, {  useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useGlobalContext } from '@/context/GlobalProvider'
 import { images } from '@/constants'
@@ -29,10 +29,7 @@ const Home = () => {
       <FlatList
         data={allPosts}
         keyExtractor={(item) => item.$id}
-        renderItem={({ item }) => {
-          return <VideoCard video={item} />
-        }
-        }
+        renderItem={({ item }) =>  (<VideoCard video={item} />)}
         ListHeaderComponent={() => (
           <View className='my-6 px-4 space-y-6'>
             <View className='justify-between items-start mb-6 flex-row'>

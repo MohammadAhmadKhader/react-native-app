@@ -306,8 +306,6 @@ export async function deleteVideoPost(videoId:string){
             [Query.equal("user",userId ?? ""),Query.equal("video",videoId)]
         )
 
-        console.log(requiredDoc.documents[0].$id)
-
         await databases.deleteDocument(
             config.databaseId,
             config.usersVideosCollectionId,

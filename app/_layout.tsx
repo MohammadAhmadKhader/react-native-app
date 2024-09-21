@@ -3,8 +3,10 @@ import React, { useEffect } from 'react'
 import { useFonts } from 'expo-font';
 import { GlobalProvider } from "@/context/GlobalProvider";
 import { PaperProvider } from 'react-native-paper';
+import { AppRegistry } from 'react-native';
 import { SQLiteProvider } from 'expo-sqlite';
 import {createDB, dbName} from "@/lib/sqliteDb"
+import { appName } from "@/constants";
 
 SplashScreen.preventAutoHideAsync()
 
@@ -57,5 +59,7 @@ const RootLayout = () => {
     </GlobalProvider>
   )
 }
+
+AppRegistry.registerComponent(appName,()=>RootLayout)
 
 export default RootLayout

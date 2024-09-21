@@ -1,4 +1,4 @@
-import { View, Text, FlatList, Image } from 'react-native'
+import { View, Text, FlatList, Image, ActivityIndicator } from 'react-native'
 import React, { useEffect } from 'react'
 import { useLocalSearchParams } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -23,6 +23,7 @@ const Search = () => {
 
   return (
     <SafeAreaView className='bg-primary h-full'>
+      {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
       <FlatList
         data={posts}
         keyExtractor={(item) => item.$id}
