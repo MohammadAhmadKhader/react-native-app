@@ -17,12 +17,13 @@ const Home = () => {
 
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false)
   const { user } = useGlobalContext()
-
+  
   async function onRefresh() {
     setIsRefreshing(true);
     await refetchAllPosts()
     setIsRefreshing(false);
   }
+  
   return (
     <SafeAreaView className='bg-primary h-full'>
       <FlatList

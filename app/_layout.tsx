@@ -3,6 +3,8 @@ import React, { useEffect } from 'react'
 import { useFonts } from 'expo-font';
 import { GlobalProvider } from "@/context/GlobalProvider";
 import { PaperProvider } from 'react-native-paper';
+import { SQLiteProvider } from 'expo-sqlite';
+import {createDB, dbName} from "@/lib/sqliteDb"
 
 SplashScreen.preventAutoHideAsync()
 
@@ -34,22 +36,24 @@ const RootLayout = () => {
 
   return (
     <GlobalProvider>
-      <PaperProvider>
-        <Stack>
-          <Stack.Screen name="index" options={{
-            headerShown: false,
-          }} />
-          <Stack.Screen name="(auth)" options={{
-            headerShown: false,
-          }} />
-          <Stack.Screen name="(tabs)" options={{
-            headerShown: false,
-          }} />
-          <Stack.Screen name="search/[query]" options={{
-            headerShown: false,
-          }} />
-        </Stack>
-      </PaperProvider>
+      <SQLiteProvider databaseName={dbName} onInit={createDB}>
+        <PaperProvider>
+          <Stack>
+            <Stack.Screen name="index" options={{
+              headerShown: false,
+            }} />
+            <Stack.Screen name="(auth)" options={{
+              headerShown: false,
+            }} />
+            <Stack.Screen name="(tabs)" options={{
+              headerShown: false,
+            }} />
+            <Stack.Screen name="search/[query]" options={{
+              headerShown: false,
+            }} />
+          </Stack>
+        </PaperProvider>
+      </SQLiteProvider>
     </GlobalProvider>
   )
 }

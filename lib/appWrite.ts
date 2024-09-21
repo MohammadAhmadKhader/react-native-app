@@ -2,6 +2,7 @@ import { CreateVideoFormType } from '@/app/types/types';
 import { DocumentPickerAsset } from 'expo-document-picker';
 import { Client, Account, ID, Avatars, Databases, Query, Storage, ImageGravity } from 'react-native-appwrite';
 import {endpoint, platform, projectId, databaseId, userCollectionId, videoCollectionId,storageId,usersVideosCollectionId} from "@env"
+import { logErrorToLocalDb } from './sqliteDb';
 
 export const config = {
     endpoint:endpoint,
@@ -51,6 +52,7 @@ export async function createUser(email:string,username:string,password:string){
         await signIn(email,password);
         return await getCurrentUser()
     } catch (error : any) {
+        await logErrorToLocalDb(error)
         console.log(`error: ${error}`)
         throw new Error(error);
     }
@@ -91,6 +93,7 @@ export async function getCurrentUser(){
             }
         };
     } catch (error : any) {
+        await logErrorToLocalDb(error)
         console.log(`error: ${error.message}`)
     }
 }
@@ -99,6 +102,7 @@ export async function signOut(){
     try {
         await account.deleteSession("current")
     } catch (error : any) {
+        await logErrorToLocalDb(error)
         console.log(`error: ${error.message}`)
         throw new Error(error.message)
     }
@@ -106,13 +110,15 @@ export async function signOut(){
 
 export async function getAllPosts(){
     try {
+        
         const posts = await databases.listDocuments(
             config.databaseId,
             config.videoCollectionId
         )
-
+        
         return posts.documents;
     } catch (error: any) {
+        await logErrorToLocalDb(error)
         console.log(`error: ${error.message}`)
         throw new Error(error.message)
     }
@@ -128,6 +134,7 @@ export async function getLatestPosts(){
 
         return posts.documents;
     } catch (error: any) {
+        await logErrorToLocalDb(error)
         console.log(`error: ${error.message}`)
         throw new Error(error.message)
     }
@@ -158,6 +165,7 @@ export async function getUserPosts(userId: string){
         
         return posts.documents;
     } catch (error : any) {
+        await logErrorToLocalDb(error)
         console.log(`error: ${error.message}`)
         throw new Error(error.message)
     }
@@ -185,6 +193,7 @@ export async function createVideo(form : CreateVideoFormType){
 
         return newVideoPost;
     } catch (error : any) {
+        await logErrorToLocalDb(error)
         console.log(error.message)
         throw new Error(error)
     }
@@ -208,6 +217,7 @@ async function getFilePreview(fileId:string, fileType: string){
 
         return fileUrl;
     } catch (error : any) {
+        await logErrorToLocalDb(error)
         console.log(`error: ${error.message}`);
         throw new Error(error);
     }
@@ -233,6 +243,7 @@ async function uploadFile(file : DocumentPickerAsset, type : string){
         const fileUrl = await getFilePreview(uploadedFile.$id, type)
         return fileUrl;
     } catch (error : any) {
+        await logErrorToLocalDb(error)
         console.log(`error: ${error.message}`);
         throw new Error(error);
     }
@@ -252,6 +263,7 @@ export async function getAllLikedPostsByUser(){
 
         return videoPost.documents;
     } catch (error : any) {
+        await logErrorToLocalDb(error)
         console.log(`error: ${error.message}`)
         throw new Error(error)
     }
@@ -278,6 +290,7 @@ export async function saveVideoPost(videoPostId:string){
         if(error.message !=="Cannot convert undefined value to object"){ 
             // issue with appWrite package it throws error but everything works as expected, 
             // error was handled to not show error message to customer
+            await logErrorToLocalDb(error)
             throw new Error(error)
         }
     }
@@ -301,6 +314,7 @@ export async function deleteVideoPost(videoId:string){
             requiredDoc.documents[0].$id
         )
     } catch (error : any) {
+        await logErrorToLocalDb(error)
         console.log(`error: ${error.message}`)
         throw new Error(error)
     }

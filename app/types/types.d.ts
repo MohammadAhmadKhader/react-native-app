@@ -30,6 +30,11 @@ export type UserLikedVideos = {
     video:Video
 }[]
 
+export type DbErrorLog = {
+    id:number,
+    message:string,
+    code:number
+}
 
 
 type Prettify<T> = {
