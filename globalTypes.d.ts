@@ -4,15 +4,16 @@ declare module '*.png' {
 
     export default content
 };
-
-declare module '@env' {
-    export const endpoint: string;
-    export const platform: string;
-    export const projectId: string;
-    export const databaseId: string;
-    export const userCollectionId: string;
-    export const videoCollectionId: string;
-    export const storageId:string;
-    export const usersVideosCollectionId:string;
-    export const NODE_ENV: 'development' | 'production';
-}
+declare namespace NodeJS {
+    interface ProcessEnv {
+      NODE_ENV: 'development' | 'production';
+      EXPO_PUBLIC_ENDPOINT: string;
+      EXPO_PUBLIC_PLATFORM:string;
+      EXPO_PUBLIC_PROJECT_ID:string;
+      EXPO_PUBLIC_DATABASE_ID:string;
+      EXPO_PUBLIC_USER_COLLECTION_ID:string;
+      EXPO_PUBLIC_VIDEO_COLLECTION_ID:string;
+      EXPO_PUBLIC_STORAGE_ID:string;
+      EXPO_PUBLIC_USERS_VIDEOS_COLLECTION_ID:string;
+    }
+  }

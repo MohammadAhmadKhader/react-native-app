@@ -11,6 +11,7 @@ type Props = {
 }
 
 const VideoMenu = ({ videoId, refetch }: Props) => {
+    const {setIsAppLoading,isAppLoading} = useGlobalContext()
     const [isVisible, setIsVisible] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isVideoSaved, setIsVideoSaved] = useState<boolean>(false);
@@ -31,6 +32,7 @@ const VideoMenu = ({ videoId, refetch }: Props) => {
 
     async function handleSaveVideo() {
         if(isLoading === false) {
+            setIsAppLoading(true)
             setIsLoading(true)
             try {
                 await saveVideoPost(videoId)
@@ -40,12 +42,14 @@ const VideoMenu = ({ videoId, refetch }: Props) => {
                 Alert.alert("Error", error.message)
             } finally {
                 setIsLoading(false)
+                setIsAppLoading(false)
             }
         }
     }
 
     async function handleRemoveVideo() {
         if(isLoading === false) {
+            setIsAppLoading(true)
             setIsLoading(true)
             try {
                 await deleteVideoPost(videoId)
@@ -58,6 +62,7 @@ const VideoMenu = ({ videoId, refetch }: Props) => {
                 Alert.alert("Error", error.message)
             } finally {
                 setIsLoading(false)
+                setIsAppLoading(false)
             }
         }
     }

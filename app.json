@@ -3,7 +3,7 @@
     "name": "Application Name",
     "slug": "application name",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./assets/images/icon.png",
     "scheme": "Application Name",
     "userInterfaceStyle": "automatic",

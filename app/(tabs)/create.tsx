@@ -9,8 +9,11 @@ import * as DocumentPicker from "expo-document-picker"
 import { router } from 'expo-router'
 import { CreateVideoFormType } from '../types/types'
 import { createVideo } from '@/lib/appWrite'
+import { useGlobalContext } from '@/context/GlobalProvider'
+import AppLoader from '@/components/AppLoader'
 
 const Create = () => {
+    const {setIsAppLoading} = useGlobalContext()
     const [isUploading, setIsUploading] = useState<boolean>(false);
     const initialFormState = {
         title: "",
@@ -49,6 +52,7 @@ const Create = () => {
             return;
         }
         setIsUploading(true)
+        setIsAppLoading(true)
 
         try {
             await createVideo(form);
@@ -59,6 +63,7 @@ const Create = () => {
             Alert.alert("Error", error.message)
         } finally {
             setIsUploading(false)
+            setIsAppLoading(false)
             setForm(initialFormState)
         }
 
@@ -67,6 +72,7 @@ const Create = () => {
     return (
         <SafeAreaView className='h-full bg-primary'>
             <ScrollView className='px-4 my-6'>
+                <AppLoader />
                 <Text className='text-2xl text-white font-psemibold'>
                     Upload Video
                 </Text>

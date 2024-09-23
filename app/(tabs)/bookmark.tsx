@@ -1,33 +1,36 @@
-import { View, Text, FlatList, Image, Alert } from 'react-native'
-import React, { useCallback, useEffect, useState } from 'react'
+import { View, Text, FlatList, Alert } from 'react-native'
+import React, { useCallback, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import useAppWrite from '@/lib/useAppWrite'
 import { getAllLikedPostsByUser } from '@/lib/appWrite'
-import { useGlobalContext } from '@/context/GlobalProvider'
 import { UserLikedVideos } from '../types/types'
 import VideoCard from '@/components/VideoCard'
 import EmptyState from '@/components/EmptyState'
 import SearchInput from '@/components/SearchInput'
 import { useFocusEffect } from '@react-navigation/native'
+import { useGlobalContext } from '@/context/GlobalProvider'
 
 const bookmark = () => {
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false)
-  const { data, refetch, isLoading } = useAppWrite<UserLikedVideos>(() => getAllLikedPostsByUser())
-  const [didMakeInitialFetch, setDidMakeInitialFetch] = useState<boolean>(false)
-  useEffect(() => {
-    setDidMakeInitialFetch(true)
-  }, [])
+  const { data, refetch } = useAppWrite<UserLikedVideos>(() => getAllLikedPostsByUser())
+  const {setIsAppLoading} = useGlobalContext()
 
   useFocusEffect(useCallback(() => {
-    if (didMakeInitialFetch) {
-      refetch()
-        .catch((err: any) => Alert.alert("Error", err.message))
-    }
+    setIsAppLoading(true)
+    refetch()
+      .catch((err: any) => Alert.alert("Error", err.message))
+      .finally(()=> setIsAppLoading(false))
   }, []))
+
   async function onRefresh() {
-    setIsRefreshing(true)
-    await refetch()
-    setIsRefreshing(false)
+    try {
+      setIsRefreshing(true)
+      await refetch()
+      setIsRefreshing(false)
+    } catch (error : any) {
+      Alert.alert("Error", error.message)
+    }
+    
   }
   return (
     <SafeAreaView className='bg-primary h-full pt-5'>

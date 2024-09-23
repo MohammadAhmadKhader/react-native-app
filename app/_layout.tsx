@@ -7,6 +7,7 @@ import { AppRegistry } from 'react-native';
 import { SQLiteProvider } from 'expo-sqlite';
 import {createDB, dbName} from "@/lib/sqliteDb"
 import { appName } from "@/constants";
+import AppLoader from "@/components/AppLoader";
 
 SplashScreen.preventAutoHideAsync()
 
@@ -40,6 +41,7 @@ const RootLayout = () => {
     <GlobalProvider>
       <SQLiteProvider databaseName={dbName} onInit={createDB}>
         <PaperProvider>
+          <AppLoader />
           <Stack>
             <Stack.Screen name="index" options={{
               headerShown: false,

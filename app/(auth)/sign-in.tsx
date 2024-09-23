@@ -24,13 +24,15 @@ const SignIn = () => {
 
         try {
             await signIn(form.email, form.password)
+            const result = await getCurrentUser();
+            setUser(result.user)
 
             router.replace("/home")
         } catch (error: any) {
             if(error.message == "Creation of a session is prohibited when a session is active."){
                 try {
                     const result = await getCurrentUser()
-                    setUser(result?.user ?? null)
+                    setUser(result.user)
 
                     router.replace("/home")
                 } catch (error : any) {

@@ -1,18 +1,24 @@
 import { CreateVideoFormType } from '@/app/types/types';
 import { DocumentPickerAsset } from 'expo-document-picker';
 import { Client, Account, ID, Avatars, Databases, Query, Storage, ImageGravity } from 'react-native-appwrite';
-import {endpoint, platform, projectId, databaseId, userCollectionId, videoCollectionId,storageId,usersVideosCollectionId} from "@env"
+
 import { logErrorToLocalDb } from './sqliteDb';
+//* in real application we must have our secrets on the server-side
+const {EXPO_PUBLIC_PLATFORM, EXPO_PUBLIC_ENDPOINT, 
+    EXPO_PUBLIC_PROJECT_ID, EXPO_PUBLIC_DATABASE_ID, 
+    EXPO_PUBLIC_USER_COLLECTION_ID, EXPO_PUBLIC_VIDEO_COLLECTION_ID,
+    EXPO_PUBLIC_STORAGE_ID,EXPO_PUBLIC_USERS_VIDEOS_COLLECTION_ID
+} = process.env;
 
 export const config = {
-    endpoint:endpoint,
-    platform:platform,
-    projectId:projectId,
-    databaseId:databaseId,
-    userCollectionId:userCollectionId,
-    videoCollectionId:videoCollectionId,
-    storageId:storageId,
-    usersVideosCollectionId:usersVideosCollectionId
+    endpoint:EXPO_PUBLIC_ENDPOINT,
+    platform:EXPO_PUBLIC_PLATFORM,
+    projectId:EXPO_PUBLIC_PROJECT_ID,
+    databaseId:EXPO_PUBLIC_DATABASE_ID,
+    userCollectionId:EXPO_PUBLIC_USER_COLLECTION_ID,
+    videoCollectionId:EXPO_PUBLIC_VIDEO_COLLECTION_ID,
+    storageId:EXPO_PUBLIC_STORAGE_ID,
+    usersVideosCollectionId:EXPO_PUBLIC_USERS_VIDEOS_COLLECTION_ID
 }
 
 const client = new Client();
@@ -95,6 +101,7 @@ export async function getCurrentUser(){
     } catch (error : any) {
         await logErrorToLocalDb(error)
         console.log(`error: ${error.message}`)
+        throw new Error(error.message)
     }
 }
 
@@ -253,7 +260,7 @@ export async function getAllLikedPostsByUser(){
     try {
         
         const result = await getCurrentUser();
-        const userId = result?.user.id;
+        const userId = result.user.id;
         
         const videoPost = await databases.listDocuments(
             config.databaseId,
@@ -272,7 +279,7 @@ export async function getAllLikedPostsByUser(){
 export async function saveVideoPost(videoPostId:string){
     try {
         const result = await getCurrentUser();
-        const userId = result?.user.id;
+        const userId = result.user.id;
 
         const videoPost = await databases.listDocuments(
             config.databaseId,

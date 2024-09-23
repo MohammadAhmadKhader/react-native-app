@@ -10,8 +10,10 @@ interface UserApp {
 
 type TGlobalContext = {
     user: UserApp | null,
-    isLoading: boolean,
-    setIsLoading: Dispatch<SetStateAction<boolean>>,
+    isUserLoading: boolean,
+    isAppLoading:boolean,
+    setIsUserLoading: Dispatch<SetStateAction<boolean>>,
+    setIsAppLoading: Dispatch<SetStateAction<boolean>>,
     setUser:Dispatch<SetStateAction<UserApp | null>>
 }
 
@@ -30,7 +32,8 @@ export const useGlobalContext = () => useContext(GlobalContext)
 
 export function GlobalProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<UserApp | null>(userInitialState)
-    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [isUserLoading, setIsUserLoading] = useState<boolean>(false)
+    const [isAppLoading, setIsAppLoading] = useState<boolean>(false)
 
     useEffect(() => {
 
@@ -43,7 +46,6 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
                     avatar:res.user.avatar
                 }
                 
-                console.log(user)
                 setUser(user)
             } else {
                 setUser(null);
@@ -51,13 +53,13 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
         }).catch((err: any) => {
             console.log(err)
         }).finally(()=>{
-            setIsLoading(false);
+            setIsUserLoading(false);
         })
 
     }, [])
 
     return (
-        <GlobalContext.Provider value={{ isLoading, setIsLoading, user, setUser }}>
+        <GlobalContext.Provider value={{ isUserLoading, setIsUserLoading, user, setUser,isAppLoading,setIsAppLoading }}>
             {children}
         </GlobalContext.Provider>
     )

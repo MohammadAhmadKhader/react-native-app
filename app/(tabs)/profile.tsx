@@ -1,4 +1,4 @@
-import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native'
+import { View, Text, FlatList, TouchableOpacity, Image, Alert } from 'react-native'
 import React from 'react'
 import CustomButton from '@/components/CustomButton'
 import { getUserPosts, signOut } from "@/lib/appWrite"
@@ -8,19 +8,25 @@ import { router } from 'expo-router'
 import useAppWrite from '@/lib/useAppWrite'
 import { Video } from '@/app/types/types'
 import EmptyState from '@/components/EmptyState'
-import SearchInput from '@/components/SearchInput'
 import VideoCard from '@/components/VideoCard'
 import { icons } from '@/constants'
 import InfoBox from '@/components/InfoBox'
 
 const Profile = () => {
-  const { setUser, user } = useGlobalContext()
+  const { setUser, user,setIsAppLoading } = useGlobalContext()
   const { data: posts } = useAppWrite<Video[]>(() => getUserPosts(user?.id ?? ""))
   async function logout() {
-    await signOut()
-    setUser(null)
+    try {
+      setIsAppLoading(true)
+      await signOut()
+      setUser(null)
     
-    router.push("/")
+      router.push("/")
+    } catch (error : any) {
+      Alert.alert("Error", error.message)
+    } finally{ 
+      setIsAppLoading(false)
+    }
   }
 
   return (

@@ -7,7 +7,7 @@ openDatabase().then(async (db)=>{
     if(!db){
         throw new Error("Database connected was not established")
     }
-    console.log("database is opened")
+    
     closeDb(db)
 }).catch((err)=>{
     logDbError(err)
